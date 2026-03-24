@@ -1,9 +1,11 @@
 let
   nixpkgs = fetchTarball {
-    url = "https://github.com/xhalo32/nixpkgs/archive/0bfb18dadd72cdf295640273c350c615fe448181.tar.gz";
-    sha256 = "sha256:1iqax37153bjjiy67mw8z06ks3s5d0xmkq2w2irhyh0a8x3ia226";
+    url = "https://github.com/xhalo32/nixpkgs/archive/60759a877a2999df89e233dad66e3450d8d50e97.tar.gz";
+    sha256 = "sha256-NL7ztQp47o2yoXMRZOUTjykFg5lP4+RCPZ3ewFyqNuk=";
   };
-  pkgs = import nixpkgs { };
+  pkgs = import nixpkgs {
+    overlays = [ (import ./overlay.nix) ];
+  };
   lib = pkgs.lib;
 in
 rec {
@@ -22,9 +24,8 @@ rec {
 
     leanDeps = [
       pkgs.leanPackages.batteries
-      # pkgs.leanPackages.mathlib
     ];
   };
 
-  shell = package.devShell;
+  shell = pkgs.lakeDevTools.mkLakeDevShell { inherit package; };
 }
